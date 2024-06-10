@@ -1,5 +1,6 @@
 using LoanCalculator.Configurations;
 using LoanCalculator.Data;
+using LoanCalculator.Factories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,15 +21,19 @@ if (allowedHosts == "*")
 }
 
 // Add services to the container.
-// builder.Services.AddControllers();
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<LoanCalculatorFactory>();
 
 BuildConfiguration();
 ConfigureUrl();
 ConfigureDb();
 
 var app = builder.Build();
+
+SeedDatabase(app);
 
 if (app.Environment.IsDevelopment())
 {
@@ -43,7 +48,7 @@ if (allowedHosts == "*")
     app.UseCors("AllowAll");
 }
 
-// app.MapControllers();
+app.MapControllers();
 
 app.Run();
 
@@ -92,3 +97,12 @@ void ConfigureSQLServer(DbOptions dbOptions)
     });
 }
 #endregion
+
+void SeedDatabase(WebApplication app)
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<Context>();
+        context.SeedDatabase().Wait();
+    }
+}
