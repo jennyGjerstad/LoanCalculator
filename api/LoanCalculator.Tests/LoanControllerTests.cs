@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Moq;
 using LoanCalculator.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using LoanCalculator.Configurations;
 
 namespace LoanCalculator.Tests;

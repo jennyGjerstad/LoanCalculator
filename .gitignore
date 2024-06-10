@@ -1,10 +1,10 @@
-/LoanCalculator.Tests/obj
-/LoanCalculator.Tests/bin
-/api/bin
-/api/obj
+/api/LoanCalculator.Tests/obj
+/api/LoanCalculator.Tests/bin
+/api/LoanCalculator/bin
+/api/LoanCalculator/obj
 /web/.angular
 /web/node_modules
 /web/.vscode
-/api/Resources/loancalculator.db
-/api/appsettings.Development.json
+/api/LoanCalculator/Resources/loancalculator.db
+/api/LoanCalculator/appsettings.Development.json
 /web/.editorconfig

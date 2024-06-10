@@ -6,7 +6,6 @@ using Moq;
 using LoanCalculator.Models;
 using LoanCalculator.Services;
 using LoanCalculator.Configurations;
-using Microsoft.Extensions.Hosting;
 
 namespace LoanCalculator.Tests;
 

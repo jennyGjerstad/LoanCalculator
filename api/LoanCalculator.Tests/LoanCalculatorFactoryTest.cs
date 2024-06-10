@@ -1,13 +1,12 @@
-using LoanCalculator.Data;
+using Moq;
+using Microsoft.EntityFrameworkCore;
 using LoanCalculator.Factories;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+using LoanCalculator.Data;
+using LoanCalculator.Configurations;
 using Microsoft.Extensions.Configuration;
-using Moq;
 using LoanCalculator.Models;
 using LoanCalculator.Services;
-using Microsoft.Extensions.Hosting;
-using LoanCalculator.Configurations;
 
 namespace LoanCalculator.Tests;
 
