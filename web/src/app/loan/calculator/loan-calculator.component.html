@@ -1,0 +1,69 @@
+<div>
+    <mat-form-field>
+        <mat-label>Payment scheme</mat-label>
+        <mat-select [(ngModel)]="paymentScheme" (valueChange)="onPaymentSchemeChange()">
+            @for(scheme of schemes; track scheme.id) {
+                <mat-option [value]="scheme">
+                    {{ scheme.displayValue }}
+                </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+</div>
+<div *ngIf="loanType && paymentScheme">
+    <p>{{ paymentScheme.description }}</p>
+    <span> This {{loanType.displayValue | lowercase}} has a fixed interest rate of {{ loanType.value }}%</span>
+</div>
+<div *ngIf="loanType && paymentScheme">
+    <mat-form-field class="loanAmount">
+        <mat-label>Loan Amount</mat-label>
+        <input [formControl]="amountControl" matInput (keydown)="onKeydown($event)"/>
+        <mat-error *ngIf="!amountControl.valid && amountControl.touched">
+            Loan amount is required and must be greater than 0.
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="years">
+        <mat-label>Years</mat-label>
+        <input [formControl]="yearsControl" matInput (keydown)="onKeydown($event)"/>
+        <mat-error *ngIf="!yearsControl.valid && yearsControl.touched">
+            Number of years is required and must be greater than 0.
+        </mat-error>
+    </mat-form-field>
+</div>
+<div class="flex-row">
+    <button mat-button (click)="getTable()" [disabled]="!(yearsControl.valid && amountControl.valid)">
+        {{ paymentPlan.length > 0 ? 'Refresh' : 'Calculate' }}
+    </button>
+    <span style="flex: 1;"></span>
+    <mat-label *ngIf="paymentPlan.length > 12">Year {{ pageIndex + 1 }}</mat-label>
+</div>
+<div [hidden]="paymentPlan.length === 0">
+    <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="month">
+            <th mat-header-cell *matHeaderCellDef> Month </th>
+            <td mat-cell *matCellDef="let payment"> {{ months[payment.month] }} </td>
+        </ng-container>
+        <ng-container matColumnDef="totalAmount">
+            <th mat-header-cell *matHeaderCellDef> Total </th>
+            <td mat-cell *matCellDef="let payment"> {{ payment.totalAmount | number }} </td>
+        </ng-container>
+        <ng-container matColumnDef="interestAmount">
+            <th mat-header-cell *matHeaderCellDef> Interest </th>
+            <td mat-cell *matCellDef="let payment"> {{ payment.interestAmount | number }} </td>
+        </ng-container>
+        <ng-container matColumnDef="principalAmount">
+            <th mat-header-cell *matHeaderCellDef> Principal </th>
+            <td mat-cell *matCellDef="let payment"> {{ payment.principalAmount | number }} </td>
+        </ng-container>
+        <ng-container matColumnDef="outstandingAmount">
+            <th mat-header-cell *matHeaderCellDef> Outstanding </th>
+            <td mat-cell *matCellDef="let payment"> {{ payment.outstandingAmount | number }} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[12]" showFirstLastButtons aria-label="Select year"
+    (page)="onPageChange($event)">
+    </mat-paginator>
+</div>

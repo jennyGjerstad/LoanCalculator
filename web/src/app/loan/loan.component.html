@@ -1,0 +1,10 @@
+<mat-form-field>
+  <mat-label>Loan type</mat-label>
+    <mat-select [(ngModel)]="selectedType">
+    @for (type of loanTypes; track type.id) {
+    <mat-option [value]="type">{{ type.displayValue }} ({{ type.value }}%)</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+<loan-calculator *ngIf="selectedType" [loanType]="selectedType">
+</loan-calculator>

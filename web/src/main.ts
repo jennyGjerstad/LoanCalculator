@@ -2,6 +2,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 import { API_URL, AppSettings } from './configuration/configuration';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 async function getSettings(): Promise<AppSettings> {
   const res = await fetch(`assets/appsettings.json?t=${new Date().getTime()}`);
