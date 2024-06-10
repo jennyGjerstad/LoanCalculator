@@ -6,7 +6,6 @@ import { LoanService } from '../services/loan/loan.services';
 @Component({
   selector: 'loan',
   templateUrl: './loan.component.html',
-  styleUrl: './loan.component.scss',
 })
 export class LoanComponent implements OnInit, OnDestroy {
   protected loanTypes: LoanType[] = [];

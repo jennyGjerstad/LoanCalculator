@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { LoanCalculatorModule } from './loan/loan.module';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
   standalone: true,
-  imports: [MatCardModule, LoanCalculatorModule],
+  imports: [MatToolbarModule, LoanCalculatorModule],
 })
 export class AppComponent {
   title = 'loancalculator';

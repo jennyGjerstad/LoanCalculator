@@ -8,9 +8,6 @@ In /api:
 In /web:
 * npm install
 
-in /LoanCalculator.Tests:
-* dotnet restore
-
 ## Configuring API
 
 * Go to appsettings.json or appsetting.Development.json
@@ -43,6 +40,14 @@ EXAMPLE:
 
     "apiUrl": "http://localhost:5240"
 
-## How to run unit test
+## How to run API
+Go to /api/LoanCalculator and run:
+* dotnet run
 
-* Run: dotnet test in /LoanCalculator.Tests
+## How to run WEB
+Go to /web and run:
+* npm start
+
+## How to run unit test
+Go to /api/LoanCalculator.Tests and run:
+* dotnet test

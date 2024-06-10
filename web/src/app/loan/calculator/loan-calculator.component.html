@@ -4,17 +4,18 @@
         <mat-select [(ngModel)]="paymentScheme" (valueChange)="onPaymentSchemeChange()">
             @for(scheme of schemes; track scheme.id) {
                 <mat-option [value]="scheme">
-                    {{ scheme.displayValue }}
+                    {{ scheme.displayValue }} 
                 </mat-option>
             }
         </mat-select>
     </mat-form-field>
+    <mat-icon *ngIf="paymentScheme" color="primary" [matTooltip]="paymentScheme.description" aria-hidden="false"
+    aria-label="Example home icon" fontIcon="info"> {{paymentScheme.displayValue}} </mat-icon>
 </div>
 <div *ngIf="loanType && paymentScheme">
-    <p>{{ paymentScheme.description }}</p>
     <span> This {{loanType.displayValue | lowercase}} has a fixed interest rate of {{ loanType.value }}%</span>
 </div>
-<div *ngIf="loanType && paymentScheme">
+<div *ngIf="loanType && paymentScheme" class="user-input">
     <mat-form-field class="loanAmount">
         <mat-label>Loan Amount</mat-label>
         <input [formControl]="amountControl" matInput (keydown)="onKeydown($event)"/>
