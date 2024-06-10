@@ -5,5 +5,6 @@
 /web/.angular
 /web/node_modules
 /web/.vscode
-api/Resources/loancalculator.db
-api/appsettings.Development.json
+/api/Resources/loancalculator.db
+/api/appsettings.Development.json
+/web/.editorconfig
