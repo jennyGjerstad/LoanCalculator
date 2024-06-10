@@ -33,8 +33,6 @@ ConfigureDb();
 
 var app = builder.Build();
 
-SeedDatabase(app);
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -97,12 +95,3 @@ void ConfigureSQLServer(DbOptions dbOptions)
     });
 }
 #endregion
-
-void SeedDatabase(WebApplication app)
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var context = scope.ServiceProvider.GetRequiredService<Context>();
-        context.SeedDatabase().Wait();
-    }
-}

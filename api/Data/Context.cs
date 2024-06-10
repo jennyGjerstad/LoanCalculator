@@ -1,22 +1,23 @@
 using Microsoft.EntityFrameworkCore;
 using LoanCalculator.Models;
+using LoanCalculator.Configurations;
 
 namespace LoanCalculator.Data;
 
 public class Context : DbContext
 {
-    private readonly IConfiguration _configuration;
+    private readonly DbOptions _dbOptions;
     private readonly IWebHostEnvironment _environment;
     public Context(DbContextOptions<Context> options,
                    IWebHostEnvironment environment,
-                   IConfiguration configuration) : base(options)
+                   DbOptions dbOptions) : base(options)
     {
         _environment = environment;
-        _configuration = configuration;
+        _dbOptions = dbOptions;
 
-        if (IsTestEnvironment())
+        if (!_environment.IsProduction())
         {
-            EnsureDatabaseExist().GetAwaiter().GetResult();
+            EnsureDatabaseExist();
         }
     }
 
@@ -38,27 +39,20 @@ public class Context : DbContext
         });
     }
 
-    public async Task EnsureDatabaseExist()
+    public async void EnsureDatabaseExist()
     {
         try
         {
+            await Database.EnsureDeletedAsync();
             await Database.EnsureCreatedAsync();
         } catch (Exception ex)
         {
             Console.WriteLine($"Error when ensuring database exists: {ex.Message}");
         }
-    }
-
-    public async Task SeedDatabase()
-    {
-        if (_environment.IsDevelopment() && _configuration.GetValue<bool>("DbConfiguration:SeedDatabase"))
+        if (_dbOptions.SeedDatabase)
         {
             try
             {
-                // Husk å ta denne vekk igjen!
-                await Database.EnsureDeletedAsync();
-                await Database.EnsureCreatedAsync();
-
                 var paymentScheme = new PaymentScheme() {
                     Id = 1,
                     Name = "Series Loan",
@@ -77,10 +71,5 @@ public class Context : DbContext
                 Console.WriteLine($"Error when ensuring database exists: {ex.Message}");
             }
         }
-    }
-
-    public bool IsTestEnvironment()
-    {
-        return _configuration.GetValue<bool>("TestEnvironment");
     }
 }

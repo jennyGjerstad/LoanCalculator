@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using LoanCalculator.Tests.Utils;
 using LoanCalculator.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
+using LoanCalculator.Configurations;
 
 namespace LoanCalculator.Tests;
 
@@ -19,22 +20,26 @@ public class LoanControllerTests
         private DbContextOptions<Context> _dbContextOptions;
         private Context _context;
         private IConfiguration _configuration;
+        private DbOptions _dbOptions;
     
     [SetUp]
     public void Setup()
     {
         _mockWebHostEnvironment = new Mock<IWebHostEnvironment>();
-        _mockWebHostEnvironment.Setup(env => env.EnvironmentName).Returns(CustomEnvironments.Test);
+        _mockWebHostEnvironment.Setup(env => env.EnvironmentName).Returns("Staging");
 
         // Load test configuration from appsettings.Test.json
         _configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.Test.json")
             .Build();
 
+        _dbOptions = _configuration.GetSection("DbConfiguration")?.Get<DbOptions>() ??
+                    throw new Exception("Could not load DbConfiguration");
+
         _dbContextOptions = new DbContextOptionsBuilder<Context>()
             .UseInMemoryDatabase("TestDatabase")
             .Options;
-        _context = new Context(_dbContextOptions, _mockWebHostEnvironment.Object, _configuration);
+        _context = new Context(_dbContextOptions, _mockWebHostEnvironment.Object, _dbOptions);
 
         _loanCalculatorFactory = new LoanCalculatorFactory(_context);
         _loanController = new LoanController(_context, _loanCalculatorFactory);

@@ -1,5 +1,4 @@
-namespace LoanCalculator.Utils
-{
+namespace LoanCalculator.Utils;
 public enum Month
 {
     January,
@@ -14,5 +13,4 @@ public enum Month
     October,
     November,
     December
-}
 }

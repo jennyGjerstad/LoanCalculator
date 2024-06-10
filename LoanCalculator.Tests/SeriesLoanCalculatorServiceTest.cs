@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using LoanCalculator.Tests.Utils;
 using LoanCalculator.Models;
 using LoanCalculator.Services;
+using LoanCalculator.Configurations;
+using Microsoft.Extensions.Hosting;
 
 namespace LoanCalculator.Tests;
 
@@ -17,22 +18,26 @@ public class SeriesLoanCalculatorServiceTest
     private IConfiguration _configuration;
     private SeriesLoanCalculatorService _service;
     private LoanCalculationRequest _request;
+    private DbOptions _dbOptions;
 
     [SetUp]
     public void Setup()
     {
         _mockWebHostEnvironment = new Mock<IWebHostEnvironment>();
-        _mockWebHostEnvironment.Setup(env => env.EnvironmentName).Returns(CustomEnvironments.Test);
+        _mockWebHostEnvironment.Setup(env => env.EnvironmentName).Returns("Staging");
 
         // Load test configuration from appsettings.Test.json
         _configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.Test.json")
             .Build();
+        _dbOptions = _configuration.GetSection("DbConfiguration")?.Get<DbOptions>() ??
+                    throw new Exception("Could not load DbConfiguration");
 
         _dbContextOptions = new DbContextOptionsBuilder<Context>()
             .UseInMemoryDatabase("TestDatabase")
             .Options;
-        _context = new Context(_dbContextOptions, _mockWebHostEnvironment.Object, _configuration);
+
+        _context = new Context(_dbContextOptions, _mockWebHostEnvironment.Object, _dbOptions);
         _service = new SeriesLoanCalculatorService(_context);
 
         SeedDatabase();
@@ -98,7 +103,7 @@ public class SeriesLoanCalculatorServiceTest
         var paymentPlanList = paymentPlan.ToList();
         paymentPlanList.ForEach(payment => Assert.That((int)payment.PrincipalAmount, Is.EqualTo(expectedPrincipalAmount)));
 
-        for (int i = 0; i < 12; i++ )
+        for (int i = 0; i < 12; i++)
         {
             Assert.Multiple(() =>
             {
